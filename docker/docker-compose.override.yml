@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: builder
+    command: sh -c "mkdir -p logs && exec npx ts-node-dev --respawn --transpile-only src/app.ts"
+    volumes:
+      - ../src:/app/src
+      - ../train-ticket-be.json:/app/train-ticket-be.json:ro
+    environment:
+      NODE_ENV: development
+      LOG_LEVEL: debug
+      DATA_FILE_PATH: /app/train-ticket-be.json
+    healthcheck:
+      disable: true
